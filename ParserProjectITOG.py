@@ -73,17 +73,18 @@ class App:
     def __init__(self, window):
         self.window = window
         self.window.title("Imagenerator")
-        self.window.geometry("500x250")
+        self.window.geometry("500x300")
+        self.window.configure(bg="#f0f0f0")
 
-        self.label = tk.Label(window, text="Нажмите 'Начать' для загрузки изображений")
+        self.label = tk.Label(window, text="Нажмите 'Начать' для загрузки изображений", bg="#f0f0f0", font=("Arial", 12))
         self.label.pack(pady=10)
 
-        self.start_button = tk.Button(window, text="Начать", command=self.start_loading)
+        self.start_button = tk.Button(window, text="Начать", command=self.start_loading, bg="#4CAF50", fg="white")
         self.start_button.pack(pady=10)
 
-        self.stop_button = tk.Button(window, text="Завершить", command=self.stop_loading)
+        self.stop_button = tk.Button(window, text="Завершить", command=self.stop_loading, bg="#f44336", fg="white")
         self.stop_button.pack(pady=10)
-        self.stop_button.config(state=tk.DISABLED)  
+        self.stop_button.config(state=tk.DISABLED) 
 
     def start_loading(self):
         self.start_button.config(state=tk.DISABLED)
