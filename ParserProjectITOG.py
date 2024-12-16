@@ -10,7 +10,7 @@ class BaseImagenerate:
     def __init__(self, base_url, directory='Pictures'):
         self.base_url = base_url
         self.directory = directory
-        self._prepare_directory() # Для подготовки файла загруженных картинок
+        self._prepare_directory()  # Для подготовки файла загруженных картинок
         self.lock = threading.Lock()
         self.running = True  # Переменная для отслеживания состояния загрузки
 
@@ -23,7 +23,7 @@ class BaseImagenerate:
         raise NotImplementedError()
 
 class Imagenerator(BaseImagenerate):
-    def load_images(self, pages=1): # 
+    def load_images(self, pages=1): 
         threads = []
         for page in range(1, pages + 1):
             if not self.running:
@@ -32,10 +32,12 @@ class Imagenerator(BaseImagenerate):
             thread = threading.Thread(target=self._load_img, args=(url,))
             threads.append(thread)
             thread.start()
-        if len(threads) >= 3:
-            for thread in threads:
-                thread.join()
-            threads = []
+            if len(threads) >= 3:
+                for thread in threads:
+                    thread.join()
+                threads = []
+        for thread in threads:
+            thread.join()
 
     def _load_img(self, url):
         response = requests.get(url)
@@ -50,10 +52,12 @@ class Imagenerator(BaseImagenerate):
             thread = threading.Thread(target=self._download_image, args=(img_url,))
             threads.append(thread)
             thread.start()
-        if len(threads) >= 3:
-            for thread in threads:
-                thread.join()
-            threads = []
+            if len(threads) >= 3:
+                for thread in threads:
+                    thread.join()
+                threads = []
+        for thread in threads:
+            thread.join()
 
     def _download_image(self, img_url):
         img_response = requests.get(img_url, stream=True)
@@ -73,18 +77,17 @@ class App:
     def __init__(self, window):
         self.window = window
         self.window.title("Imagenerator")
-        self.window.geometry("500x300")
-        self.window.configure(bg="#f0f0f0")
+        self.window.geometry("500x250")
 
-        self.label = tk.Label(window, text="Нажмите 'Начать' для загрузки изображений", bg="#f0f0f0", font=("Arial", 12))
+        self.label = tk.Label(window, text="Нажмите 'Начать' для загрузки изображений")
         self.label.pack(pady=10)
 
-        self.start_button = tk.Button(window, text="Начать", command=self.start_loading, bg="#4CAF50", fg="white")
+        self.start_button = tk.Button(window, text="Начать", command=self.start_loading)
         self.start_button.pack(pady=10)
 
-        self.stop_button = tk.Button(window, text="Завершить", command=self.stop_loading, bg="#f44336", fg="white")
+        self.stop_button = tk.Button(window, text="Завершить", command=self.stop_loading)
         self.stop_button.pack(pady=10)
-        self.stop_button.config(state=tk.DISABLED) 
+        self.stop_button.config(state=tk.DISABLED)  
 
     def start_loading(self):
         self.start_button.config(state=tk.DISABLED)
