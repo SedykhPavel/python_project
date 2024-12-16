@@ -32,9 +32,10 @@ class Imagenerator(BaseImagenerate):
             thread = threading.Thread(target=self._load_img, args=(url,))
             threads.append(thread)
             thread.start()
-
-        for thread in threads:
-            thread.join()
+        if len(threads) >= 3:
+            for thread in threads:
+                thread.join()
+            threads = []
 
     def _load_img(self, url):
         response = requests.get(url)
@@ -49,9 +50,10 @@ class Imagenerator(BaseImagenerate):
             thread = threading.Thread(target=self._download_image, args=(img_url,))
             threads.append(thread)
             thread.start()
-
-        for thread in threads:
-            thread.join()
+        if len(threads) >= 3:
+            for thread in threads:
+                thread.join()
+            threads = []
 
     def _download_image(self, img_url):
         img_response = requests.get(img_url, stream=True)
